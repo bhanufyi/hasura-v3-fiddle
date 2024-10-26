@@ -1,0 +1,112 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Artist
+  description: The record of all artists
+  fields:
+    - name: artistId
+      type: Int4!
+      description: The identifier of an artist
+    - name: name
+      type: Varchar
+      description: The name of an artist
+  graphql:
+    typeName: Chinook_Artist
+    inputTypeName: Chinook_ArtistInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: chinook_connector
+      dataConnectorObjectType: Artist
+      fieldMapping:
+        artistId:
+          column:
+            name: ArtistId
+        name:
+          column:
+            name: Name
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Artist
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - artistId
+          - name
+
+---
+kind: ObjectBooleanExpressionType
+version: v1
+definition:
+  name: ArtistBoolExp
+  objectType: Artist
+  dataConnectorName: chinook_connector
+  dataConnectorObjectType: Artist
+  comparableFields:
+    - fieldName: artistId
+      operators:
+        enableAll: true
+    - fieldName: name
+      operators:
+        enableAll: true
+  graphql:
+    typeName: Chinook_ArtistBoolExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: Artist
+  objectType: Artist
+  source:
+    dataConnectorName: chinook_connector
+    collection: Artist
+  filterExpressionType: ArtistBoolExp
+  orderableFields:
+    - fieldName: artistId
+      orderByDirections:
+        enableAll: true
+    - fieldName: name
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: chinook_artist
+    selectUniques:
+      - queryRootField: chinook_artistByArtistId
+        uniqueIdentifier:
+          - artistId
+    orderByExpressionType: Chinook_ArtistOrderBy
+  description: The record of all artists
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Artist
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: album
+  source: Artist
+  target:
+    model:
+      name: Album
+      relationshipType: Array
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: artistId
+      target:
+        modelField:
+          - fieldName: artistId
+

@@ -1,0 +1,263 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Customer
+  description: The record of all customers
+  fields:
+    - name: address
+      type: Varchar
+    - name: city
+      type: Varchar
+    - name: company
+      type: Varchar
+    - name: country
+      type: Varchar
+    - name: customerId
+      type: Int4!
+      description: The identifier of customer
+    - name: email
+      type: Varchar!
+    - name: fax
+      type: Varchar
+    - name: firstName
+      type: Varchar!
+      description: The first name of a customer
+    - name: lastName
+      type: Varchar!
+      description: The last name of a customer
+    - name: phone
+      type: Varchar
+    - name: postalCode
+      type: Varchar
+    - name: state
+      type: Varchar
+    - name: supportRepId
+      type: Int4
+  graphql:
+    typeName: Chinook_Customer
+    inputTypeName: Chinook_CustomerInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: chinook_connector
+      dataConnectorObjectType: Customer
+      fieldMapping:
+        address:
+          column:
+            name: Address
+        city:
+          column:
+            name: City
+        company:
+          column:
+            name: Company
+        country:
+          column:
+            name: Country
+        customerId:
+          column:
+            name: CustomerId
+        email:
+          column:
+            name: Email
+        fax:
+          column:
+            name: Fax
+        firstName:
+          column:
+            name: FirstName
+        lastName:
+          column:
+            name: LastName
+        phone:
+          column:
+            name: Phone
+        postalCode:
+          column:
+            name: PostalCode
+        state:
+          column:
+            name: State
+        supportRepId:
+          column:
+            name: SupportRepId
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Customer
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - address
+          - city
+          - company
+          - country
+          - customerId
+          - email
+          - fax
+          - firstName
+          - lastName
+          - phone
+          - postalCode
+          - state
+          - supportRepId
+
+---
+kind: ObjectBooleanExpressionType
+version: v1
+definition:
+  name: CustomerBoolExp
+  objectType: Customer
+  dataConnectorName: chinook_connector
+  dataConnectorObjectType: Customer
+  comparableFields:
+    - fieldName: address
+      operators:
+        enableAll: true
+    - fieldName: city
+      operators:
+        enableAll: true
+    - fieldName: company
+      operators:
+        enableAll: true
+    - fieldName: country
+      operators:
+        enableAll: true
+    - fieldName: customerId
+      operators:
+        enableAll: true
+    - fieldName: email
+      operators:
+        enableAll: true
+    - fieldName: fax
+      operators:
+        enableAll: true
+    - fieldName: firstName
+      operators:
+        enableAll: true
+    - fieldName: lastName
+      operators:
+        enableAll: true
+    - fieldName: phone
+      operators:
+        enableAll: true
+    - fieldName: postalCode
+      operators:
+        enableAll: true
+    - fieldName: state
+      operators:
+        enableAll: true
+    - fieldName: supportRepId
+      operators:
+        enableAll: true
+  graphql:
+    typeName: Chinook_CustomerBoolExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: Customer
+  objectType: Customer
+  source:
+    dataConnectorName: chinook_connector
+    collection: Customer
+  filterExpressionType: CustomerBoolExp
+  orderableFields:
+    - fieldName: address
+      orderByDirections:
+        enableAll: true
+    - fieldName: city
+      orderByDirections:
+        enableAll: true
+    - fieldName: company
+      orderByDirections:
+        enableAll: true
+    - fieldName: country
+      orderByDirections:
+        enableAll: true
+    - fieldName: customerId
+      orderByDirections:
+        enableAll: true
+    - fieldName: email
+      orderByDirections:
+        enableAll: true
+    - fieldName: fax
+      orderByDirections:
+        enableAll: true
+    - fieldName: firstName
+      orderByDirections:
+        enableAll: true
+    - fieldName: lastName
+      orderByDirections:
+        enableAll: true
+    - fieldName: phone
+      orderByDirections:
+        enableAll: true
+    - fieldName: postalCode
+      orderByDirections:
+        enableAll: true
+    - fieldName: state
+      orderByDirections:
+        enableAll: true
+    - fieldName: supportRepId
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: chinook_customer
+    selectUniques:
+      - queryRootField: chinook_customerByCustomerId
+        uniqueIdentifier:
+          - customerId
+    orderByExpressionType: Chinook_CustomerOrderBy
+  description: The record of all customers
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Customer
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: employee
+  source: Customer
+  target:
+    model:
+      name: Employee
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: supportRepId
+      target:
+        modelField:
+          - fieldName: employeeId
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: invoice
+  source: Customer
+  target:
+    model:
+      name: Invoice
+      relationshipType: Array
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: customerId
+      target:
+        modelField:
+          - fieldName: customerId
+

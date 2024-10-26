@@ -1,0 +1,8 @@
+version: v1
+project: lenient-tick-2987
+subgraphs:
+    app:
+        path: ./app
+    chinook:
+        path: ./chinook
+defaultSupergraphManifest: base
